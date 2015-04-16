@@ -1,6 +1,6 @@
 {
   "name": "dennis",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Björn Ramberg <bjorne@gah.se>",
   "license": "MIT/X11",
   "description": "DNS proxy for OSX",
