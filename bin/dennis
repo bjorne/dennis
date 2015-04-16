@@ -14,7 +14,11 @@ var defaults = {
 
 switch (argv._[0]) {
 case 'server':
-  var configPath = path.resolve(__dirname, '../config/dennis.json');
+  var configPath = path.resolve(process.env.HOME, '.dennis.json');
+  if (!fs.existsSync(configPath)) {
+    console.log("Could not find config file at", configPath);
+    process.exit(1);
+  }
   var config = JSON.parse(fs.readFileSync(configPath));
   config = _.merge(defaults, config, argv);
   runServer(config);
