@@ -1,7 +1,10 @@
 {
   "name": "dennis",
   "version": "0.0.1",
-  "description": "",
+  "author": "Björn Ramberg <bjorne@gah.se>",
+  "license": "MIT/X11",
+  "description": "DNS proxy for OSX",
+  "bin": "./bin/dennis",
   "main": "bin/dennis",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
