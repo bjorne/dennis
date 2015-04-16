@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+
+var dns = require('native-dns');
+var util = require('util');
+var _ = require('lodash');
+var path = require('path');
+var fs = require('fs');
+
+var argv = require('minimist')(process.argv.slice(2));
+
+var defaults = {
+  port: 1553
+};
+
+switch (argv._[0]) {
+case 'server':
+  var configPath = path.resolve(__dirname, '../config/dns-proxy.json');
+  var config = JSON.parse(fs.readFileSync(configPath));
+  config = _.merge(defaults, config, argv);
+  runServer(config);
+  break;
+default:
+  printUsage();
+  process.exit(1);
+}
+
+function printUsage() {
+  if (argv._.length < 1 || argv._[0] == 'help') {
+    console.log('Usage:');
+    console.log(' ', path.basename(__filename), 'server');
+    console.log(' ', path.basename(__filename), 'help');
+  }
+}
+
+function runServer(config) {
+  var server = dns.createServer();
+  server.on('request', function (request, response) {
+    var serviceName = request.question[0].name.split(".");
+    var domain = serviceName.pop();
+    serviceName = serviceName.join(".");
+    var start = Date.now();
+    var targetDomain = config.domains[domain];
+    if (!targetDomain || !targetDomain.host) {
+      console.log("ERR! Domain", domain, "not mapped");
+      return response.send();
+    }
+    var question = _.clone(request.question[0], true);
+    question.name = serviceName;
+    if (targetDomain.suffix) {
+      question.name += '.' + targetDomain.suffix;
+    }
+    var req = dns.Request({
+      question: question,
+      server: { address: targetDomain.host, port: targetDomain.port || 53, type: targetDomain.proto || 'udp' },
+      timeout: targetDomain.timeout || 1000
+    });
+    req.on('timeout', function () {
+      console.log('Timeout in making request', question);
+    });
+    req.on('message', function (err, answer) {
+      console.log(request.question[0].name, 'resolved to', answer.answer.length, 'hosts via', targetDomain.host);
+      answer.answer.forEach(function (a) {
+        a.name = a.name.replace(new RegExp(targetDomain.suffix + '$'), domain);
+        response.answer.push(a);
+      });
+      response.send();
+    });
+    req.on('end', function () {
+      var delta = (Date.now()) - start;
+      console.log('Request done: ' + delta.toString() + 'ms');
+    });
+    req.send();
+  });
+  server.on('error', function (err, buff, req, res) {
+    console.log(err.stack);
+  });
+  server.serve(config.port);
+  console.log('Alive and kicking at port', config.port);
+}
