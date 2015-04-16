@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>dns-proxy</string>
+    <key>Program</key>
+    <string>{{node}}</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>{{node}}</string>
+      <string>{{program}}</string>
+      <string>server</string>
+    </array>
+    <key>StandardErrorPath</key>
+    <string>/usr/local/var/log/dns-proxy.log</string>
+    <key>StandardOutPath</key>
+    <string>/usr/local/var/log/dns-proxy.log</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+      <key>Crashed</key>
+      <true/>
+    </dict>
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>NODE_PATH</key>
+      <string>{{node_path}}</string>
+    </dict>
+  </dict>
+</plist>

@@ -19,6 +19,9 @@ case 'server':
   config = _.merge(defaults, config, argv);
   runServer(config);
   break;
+case 'install':
+  install();
+  break;
 default:
   printUsage();
   process.exit(1);
@@ -28,8 +31,21 @@ function printUsage() {
   if (argv._.length < 1 || argv._[0] == 'help') {
     console.log('Usage:');
     console.log(' ', path.basename(__filename), 'server');
+    console.log(' ', path.basename(__filename), 'install');
     console.log(' ', path.basename(__filename), 'help');
   }
+}
+
+function install() {
+  console.log("1) In order for me to load at login, put the below file contents in ~/Library/LaunchAgents/dns-proxy.plist:");
+  console.log("2) Then to start me right now: launchctl load ~/Library/LaunchAgents/dns-proxy.plist\n");
+  var template = fs.readFileSync(path.resolve(__dirname, '../config/plist.template'), 'utf-8');
+  var replacements = {
+    node: process.execPath,
+    program: __filename,
+    node_path: process.env.NODE_PATH
+  };
+  console.log(template.replace(/\{\{([^}]+)\}\}/g, function(s,m) { return replacements[m]; }));
 }
 
 function runServer(config) {
