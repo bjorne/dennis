@@ -4,7 +4,7 @@
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>dns-proxy</string>
+    <string>dennis</string>
     <key>Program</key>
     <string>{{node}}</string>
     <key>ProgramArguments</key>
@@ -14,9 +14,9 @@
       <string>server</string>
     </array>
     <key>StandardErrorPath</key>
-    <string>/usr/local/var/log/dns-proxy.log</string>
+    <string>/usr/local/var/log/dennis.log</string>
     <key>StandardOutPath</key>
-    <string>/usr/local/var/log/dns-proxy.log</string>
+    <string>/usr/local/var/log/dennis.log</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>

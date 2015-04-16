@@ -14,7 +14,7 @@ var defaults = {
 
 switch (argv._[0]) {
 case 'server':
-  var configPath = path.resolve(__dirname, '../config/dns-proxy.json');
+  var configPath = path.resolve(__dirname, '../config/dennis.json');
   var config = JSON.parse(fs.readFileSync(configPath));
   config = _.merge(defaults, config, argv);
   runServer(config);
@@ -37,8 +37,8 @@ function printUsage() {
 }
 
 function install() {
-  console.log("1) In order for me to load at login, put the below file contents in ~/Library/LaunchAgents/dns-proxy.plist:");
-  console.log("2) Then to start me right now: launchctl load ~/Library/LaunchAgents/dns-proxy.plist\n");
+  console.log("1) In order for me to load at login, put the below file contents in ~/Library/LaunchAgents/dennis.plist:");
+  console.log("2) Then to start me right now: launchctl load ~/Library/LaunchAgents/dennis.plist\n");
   var template = fs.readFileSync(path.resolve(__dirname, '../config/plist.template'), 'utf-8');
   var replacements = {
     node: process.execPath,
