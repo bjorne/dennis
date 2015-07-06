@@ -32,7 +32,7 @@ An example Dennis configuration located in `~/.dennis.json` looks like
   "domains": {
     "ilovemyself": {
       "host": "8.8.8.8",
-      "suffix": "com"
+      "suffix": "net"
     }
   }
 }
